@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, Collection, ModalSubmitInteraction, GuildMember, ChatInputCommandInteraction, ButtonInteraction, ActivityType } from 'discord.js'
+import { Client, GatewayIntentBits, EmbedBuilder, Collection, ModalSubmitInteraction, GuildMember, ChatInputCommandInteraction, ButtonInteraction, ActivityType, ActivityOptions } from 'discord.js'
 import { defLog } from "streamlogs"
 import "dotenv/config"
 import fs from "fs"
@@ -75,7 +75,14 @@ setTimeout(() => {
 
 client.on("clientReady", () => {
     defLog.info(`Logged in as ${client.user.tag}!`, "App")
-    client.user.setActivity({name: "Hello!", type: ActivityType.Playing})
+    const activity: ActivityOptions = {
+        name: "Hello!",
+        type: ActivityType.Playing
+    }
+    client.user.setActivity(activity)
+    setInterval(() => {
+        client.user.setActivity(activity)
+    }, 1000 * 60 * 60)
 })
 
 
