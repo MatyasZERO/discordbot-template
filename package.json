@@ -14,8 +14,7 @@
     "discord.js": "^14.25.1",
     "dotenv": "^10.0.0",
     "streamlogs": "^1.4.0",
-    "tsx": "^4.20.3",
-    "url-parse": "^1.5.10"
+    "tsx": "^4.20.3"
   },
   "engines": {
     "node": ">=18.0.0"

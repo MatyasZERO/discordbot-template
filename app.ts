@@ -1,7 +1,8 @@
 import { Client, GatewayIntentBits, EmbedBuilder, Collection, ModalSubmitInteraction, GuildMember, ChatInputCommandInteraction, ButtonInteraction, ActivityType, ActivityOptions } from 'discord.js'
 import { defLog } from "streamlogs"
 import "dotenv/config"
-import fs from "fs"
+import fs from "node:fs"
+import path from "node:path"
 
 const client = new Client({
     intents: [
@@ -17,10 +18,10 @@ client.buttons = new Collection<string, Button>()
 const commands: Command[] = []
 
 if(fs.existsSync("./commands")) {
-    fs.readdirSync("./commands/").forEach(async (item) => {
-        if(fs.lstatSync("./commands/" + item).isDirectory()) {
-            fs.readdirSync("./commands/" + item).map(async item2 => {
-                commands.push((await import("./commands/" + item + "/" + item2)).command)
+    fs.readdirSync("./commands").forEach(async (item) => {
+        if(fs.lstatSync(path.resolve("commands", item)).isDirectory()) {
+            fs.readdirSync(path.resolve("commands", item)).forEach(async (item2) => {
+                commands.push((await import(path.resolve("commands", item, item2))).command)
             })
         } else {
             commands.push((await import("./commands/" + item)).command)
@@ -29,8 +30,8 @@ if(fs.existsSync("./commands")) {
 }
 
 if(fs.existsSync("./modals")) {
-    fs.readdirSync("./modals/").forEach(async (item) => {
-        const modal = ((await import("./modals/" + item)).modal)
+    fs.readdirSync("./modals").forEach(async (item) => {
+        const modal = ((await import(path.resolve("modals", item))).modal)
         client.modals.set(modal.name, modal)
         defLog.info(modal.name + " loaded!", "modal-loader")
     })
@@ -38,8 +39,8 @@ if(fs.existsSync("./modals")) {
 
 
 if(fs.existsSync("./buttons")) {
-    fs.readdirSync("./buttons/").forEach(async (item) => {
-        const button = ((await import("./buttons/" + item)).button)
+    fs.readdirSync("./buttons").forEach(async (item) => {
+        const button = ((await import(path.resolve("buttons", item))).button)
         client.buttons.set(button.name, button)
         defLog.info(button.name + " loaded!", "button-loader")
     })
